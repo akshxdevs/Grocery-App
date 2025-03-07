@@ -1,0 +1,77 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id String @id @default(uuid())
+  username String @unique
+  password String
+  name String
+  mobileNo String? @unique
+  address String?
+  orderHistory Order[]
+}
+
+model Admin {
+  id String @id @default(uuid())
+  username String @unique
+  password String 
+  companyName String
+  mobileNo String? @unique
+  address String?
+  product Product[]
+}
+
+model Product {
+  id String @id @default(uuid())
+  productName String
+  productCategory String
+  productPrice Int
+  productImg String
+  stock Int
+  stockStatus STOCK_STATUS   
+  orderPlaced Order[]
+  companyId String
+  admin Admin @relation(fields: [companyId],references: [id]) 
+}
+
+model Order {
+  id String @id @default(uuid())
+  userId String
+  productId String
+  paymentMethord PAYMENT_METHORD
+  orderStatus ORDER_STATUS
+  user User @relation(fields: [userId],references: [id])
+  product Product @relation(fields: [productId],references: [id])
+}
+
+enum STOCK_STATUS {
+  OUTOFSTOCK
+  INSTOCK
+}
+
+enum PAYMENT_METHORD {
+  CASHONDELIVERY 
+  ONLINEPAYMENT
+  WALLET
+  UPI
+}
+
+enum ORDER_STATUS {
+  PACKED
+  DISPATCHED
+  SHIPPED
+  OUTFORDELIVERY
+  DELIVERED
+}

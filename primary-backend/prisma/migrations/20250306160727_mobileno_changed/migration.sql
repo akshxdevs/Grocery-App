@@ -1,0 +1,5 @@
+-- AlterTable
+ALTER TABLE "Admin" ALTER COLUMN "mobileNo" SET DATA TYPE TEXT;
+
+-- AlterTable
+ALTER TABLE "User" ALTER COLUMN "mobileNo" SET DATA TYPE TEXT;
