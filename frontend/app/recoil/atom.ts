@@ -6,3 +6,8 @@ export const cartState = atom<
     key: "cartState",
     default: [],
 });
+
+export const totalAmountState = atom<number>({
+    key:"totalAmountState",
+    default:0
+})

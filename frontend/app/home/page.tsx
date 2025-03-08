@@ -4,7 +4,7 @@ import { Card } from "../Components/Card";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
-import { cartState } from "../recoil/atom";
+import { cartState, totalAmountState } from "../recoil/atom";
 import { BACKEND_URL } from "../config";
 import ChatModal from "../Components/Test";
 
@@ -12,6 +12,7 @@ export default function(){
     const [products,setProducts] = useState<any[]>([]);
     
     const [cart,setCart] = useRecoilState(cartState);
+    const [totalAmout,setTotalAmount] = useRecoilState(totalAmountState);
     const getAllproducts = async() => {
         try {
             const res = await axios.get(`${BACKEND_URL}/product/getallproducts`,)
@@ -24,7 +25,8 @@ export default function(){
         getAllproducts()
     },[])
     const handleCart = (product:{productId:string,productImg:string,productName:string,productPrice:number}) => {
-        setCart((prev:any)=>[...prev,product])
+        setCart((prev:any)=>[...prev,product]);
+        setTotalAmount((prev:number)=>prev + product.productPrice);
     }
     return <div> 
         <AppBar/>
