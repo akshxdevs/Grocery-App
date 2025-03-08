@@ -154,7 +154,7 @@ export const AppBar = () => {
                             <p className="text-sm text-slate-400">Incl. All taxes and charges</p>
                         </div>
                         <div className="py-2">
-                            <h1>{String(totalAmout)}</h1>
+                            <h1>₹{String(totalAmout)}</h1>
                         </div>
                         <div className="py-2">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-6">
@@ -166,7 +166,7 @@ export const AppBar = () => {
                 <div className="fixed bottom-2 right-9 w-1/5 bg-pink-600 rounded-xl">
                     <div className="flex justify-center text-center p-4  text-slate-100 font-bold">
                         <button className="text-sm">Click to pay</button>
-                        <h1 className="text-sm px-1 font-semibold">{String(totalAmout)}</h1>
+                        <h1 className="text-sm px-1 font-semibold">₹{String(totalAmout)}</h1>
                     </div>
                 </div>
               </div>
