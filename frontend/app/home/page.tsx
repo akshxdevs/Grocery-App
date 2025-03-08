@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import { cartState } from "../recoil/atom";
 import { BACKEND_URL } from "../config";
+import ChatModal from "../Components/Test";
 
 export default function(){
     const [products,setProducts] = useState<any[]>([]);
@@ -53,5 +54,6 @@ export default function(){
                 )}
             </div>
         </div>
+
     </div>
 }
