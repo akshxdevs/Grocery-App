@@ -1,12 +1,16 @@
-"use client"
-import { useEffect, useState } from "react";
+"use client";
 import { AppBar } from "../Components/AppBar";
 import { Card } from "../Components/Card";
 import axios from "axios";
-import { BACKEND_URL } from "@/app/config";
+import { useEffect, useState } from "react";
+import { useRecoilState } from "recoil";
+import { cartState } from "../recoil/atom";
+import { BACKEND_URL } from "../config";
 
 export default function(){
     const [products,setProducts] = useState<any[]>([]);
+    
+    const [cart,setCart] = useRecoilState(cartState);
     const getAllproducts = async() => {
         try {
             const res = await axios.get(`${BACKEND_URL}/product/getallproducts`,)
@@ -18,23 +22,27 @@ export default function(){
     useEffect(()=>{
         getAllproducts()
     },[])
-    return <div>
+    const handleCart = (product:{productId:string,productImg:string,productName:string,productPrice:number}) => {
+        setCart((prev:any)=>[...prev,product])
+    }
+    return <div> 
         <AppBar/>
         <Card/>
-        <div>
+        <div className="">
             <h1 className="py-10 px-40 text-lg font-semibold">Products</h1>
             <div className="px-60">
                 {products.length > 0 ? (
                     <div className="grid grid-cols-4 gap-10">
                         {products.map((product,index)=>(
                             <div key={index} className="border border-slate-300 shadow-lg rounded-lg">
-                                <img className="bg-fit bg-cover" src={product.productImg} alt="productImg" />
+                                <div className="boder border-black p-5">
+                                    <img className="bg-fit bg-cover" src={product.productImg} alt="productImg" />
                                     <h1 className="text-lg font-bold p-2">{product.productName}</h1>
-                                    <h1 className="text-sm font-light px-2">₹{product.productPrice}</h1>
-                                    <h1>{product.stockStatus}</h1>
+                                    <h1 className="text-sm font-light px-2 pb-2">₹{product.productPrice}</h1>
                                     <div className="text-center p-2 border border-red-400 text-red-400 font-bold">
-                                        <button>Add to cart</button>
+                                        <button onClick={()=>handleCart({productId:product.id,productImg:product.productImg,productName:product.productName,productPrice:product.productPrice})}>Add to cart</button>
                                     </div>
+                                </div>
                             </div>
                         ))}
                     </div>

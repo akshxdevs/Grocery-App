@@ -1,1 +1,1 @@
-export const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:3000/api/v1";
+export const BACKEND_URL = process.env.BACCKEND_URL || "http://localhost:3000/api/v1" 
