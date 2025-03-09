@@ -6,13 +6,13 @@ import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import { cartState, totalAmountState } from "../recoil/atom";
 import { BACKEND_URL } from "../config";
-import ChatModal from "../Components/Test";
 
 export default function(){
     const [products,setProducts] = useState<any[]>([]);
     
     const [cart,setCart] = useRecoilState(cartState);
     const [totalAmout,setTotalAmount] = useRecoilState(totalAmountState);
+    const [procuctCount,setProductCount] = useState(0);
     const getAllproducts = async() => {
         try {
             const res = await axios.get(`${BACKEND_URL}/product/getallproducts`,)
@@ -43,7 +43,9 @@ export default function(){
                                     <h1 className="text-lg font-bold p-2">{product.productName}</h1>
                                     <h1 className="text-sm font-light px-2 pb-2">₹{product.productPrice}</h1>
                                     <div className="text-center p-2 border border-red-400 text-red-400 font-bold">
-                                        <button onClick={()=>handleCart({productId:product.id,productImg:product.productImg,productName:product.productName,productPrice:product.productPrice})}>Add to cart</button>
+                                        <button onClick={()=>{
+                                            handleCart({productId:product.id,productImg:product.productImg,productName:product.productName,productPrice:product.productPrice})
+                                            }}>Add to cart</button>
                                     </div>
                                 </div>
                             </div>

@@ -2,17 +2,26 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 import { cartState, totalAmountState } from "../recoil/atom";
-import { Router } from "next/router";
+import LoginModal from "./LoginComponent";
+import { log } from "node:console";
 
 export const AppBar = () => {
     const router = useRouter();
     const [userId,setuserId] = useState<string|null>(null);
-    const [showCartModel,setShowCartModel] = useState(false)
+    const [showCartModel,setShowCartModel] = useState(false);
     const cart = useRecoilValue(cartState);
-    const totalAmout = useRecoilValue(totalAmountState);    
+    const totalAmout = useRecoilValue(totalAmountState);  
+    const [loginModel,setLoginModel] = useState(false);  
+    const [login,setLogin] = useState(false);
     const [count,setcount] = useState(0);
+    const showCartLength = cart.length
     useEffect(()=>{
-        setuserId(localStorage.getItem("userId"));
+        const storeUserId = localStorage.getItem("userId")
+        if (storeUserId) {
+            console.log(userId);
+            setuserId(userId);
+            setLogin(true);
+        }
     },[])
     useEffect(() => {
         if (showCartModel) {
@@ -22,7 +31,7 @@ export const AppBar = () => {
         }
       }, [showCartModel]);
     return <div className="">
-        <div className="flex justify-between p-5 ">
+        <div className="flex justify-between p-5 bg-white">
             <div className="px-2">
                 <h1 className="text-4xl font-semibold">zepto</h1>
             </div>
@@ -44,30 +53,43 @@ export const AppBar = () => {
             <div className="flex gap-6 px-10">
                 <div className="flex flex-col items-center">
                     <div className="">
-                        <button onClick={()=>router.push("/login")}>
+                        <button onClick={()=>{
+                            login ? router.push("/user/?id:/"+userId) : setLoginModel(true)
+                            }}>
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
                             </svg>
                         </button>
                     </div>
                     <div className="font-light text-base">
-                        Login
+                        {login ? "Profile" :"Login"}
                     </div>
-                    
+                    {loginModel && (
+                    <LoginModal 
+                        setLoginModel={setLoginModel} 
+                    />
+                    )}
                 </div>
                 <div className="flex flex-col items-center">
-                    <div>
-                        <button onClick={()=>{
-                            setShowCartModel(true);
-                        }}>
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
-                            </svg>
-                        </button>
+                    <div className="flex">
+                        <div className="">
+                            <div>
+                                <button onClick={()=>{
+                                    setShowCartModel(true);
+                                }}>
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
+                                    </svg>
+                                </button>
+                            </div>
+                            <div className="font-light text-base">
+                                Cart
+                            </div>
+                        </div>
+                        <div >
+                            {cart.length > 0 ? showCartLength : ""}
+                        </div>
                     </div>
-                    <div className="font-light text-base">
-                        Cart
-                    </div>  
                 </div>
             </div>
         </div>
@@ -165,7 +187,9 @@ export const AppBar = () => {
                 </div>
                 <div className="fixed bottom-2 right-9 w-1/5 bg-pink-600 rounded-xl">
                     <div className="flex justify-center text-center p-4  text-slate-100 font-bold">
-                        <button className="text-sm">Click to pay</button>
+                        <button className="text-sm" onClick={()=>{
+                            router.push("/checkout")
+                        }}>Click to pay</button>
                         <h1 className="text-sm px-1 font-semibold">₹{String(totalAmout)}</h1>
                     </div>
                 </div>
