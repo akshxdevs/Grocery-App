@@ -44,8 +44,8 @@ export default function LoginModal({ setLoginModel }: Props) {
                                 router.push("/home")
                                 localStorage.setItem("userId",res.data.user.id)
                                 localStorage.setItem("token",res.data.token)
-
                                 setLoginModel(false);
+                                window.location.reload();
                             }
                         } catch (error) {
                             console.error(error);
