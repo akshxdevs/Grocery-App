@@ -4,8 +4,6 @@ import { useRouter } from "next/navigation";
 import { useState } from "react"
 import { BACKEND_URL } from "../config";
 
-
-
 export default function(){
     const [username,setUsername] = useState("");
     const [password,setPassword] = useState("");

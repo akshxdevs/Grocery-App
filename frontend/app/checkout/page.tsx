@@ -5,30 +5,38 @@ import axios from "axios";
 import { BACKEND_URL } from "../config";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 export default function () {
     const totalAmount = useRecoilValue(totalAmountState);
     const [userId,setuserId] = useState<string|null>(null);
     const [token,setToken] = useState<string|null>(null);
     const cart = useRecoilValue(cartState);
+    const router = useRouter();
     const productIds = cart.map((ids)=>ids.productId);
+    console.log(productIds);
+    
     useEffect(()=>{
         const storeUserId = localStorage.getItem("userId");
         const storeToken = localStorage.getItem("token");
-        if(userId) return setuserId(storeUserId);
-        if(token) return setuserId(storeToken);
+        if(storeUserId) setuserId(storeUserId);
+        if(storeToken) setToken(storeToken);
     },[])
     const handlepayment = async() => {
         try {
+            console.log(token);
+            
             const res = await axios.post(`${BACKEND_URL}/order/place-order/${userId}`,{
-                userId:userId,
                 productId:productIds,
-            },{headers:{
+            },{
+                headers:{
                 authorization:token
-            }})
+            }
+        });
             if (res.data) {
                 console.log("order placed");
                 toast.success("✅ Order Placed Successfully!!")
+                router.push("/home")
             }
         } catch (error) {
             console.error("❌ Something went wrong", error);   

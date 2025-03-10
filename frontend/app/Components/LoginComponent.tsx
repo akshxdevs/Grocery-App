@@ -42,8 +42,9 @@ export default function LoginModal({ setLoginModel }: Props) {
                                 console.log("OTP Verification Successfully");
                                 toast.success("✅ User Login Sucessfull!");
                                 router.push("/home")
-                                localStorage.setItem("userId",res.data.user.id)
-                                localStorage.setItem("token",res.data.token)
+                                localStorage.setItem("userId",res.data.user.id);
+                                localStorage.setItem("token",res.data.token);
+                                localStorage.setItem("mobileNo",res.data.user.mobileNo);
                                 setLoginModel(false);
                                 window.location.reload();
                             }

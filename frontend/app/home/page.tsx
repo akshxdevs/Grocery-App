@@ -12,7 +12,6 @@ export default function(){
     
     const [cart,setCart] = useRecoilState(cartState);
     const [totalAmout,setTotalAmount] = useRecoilState(totalAmountState);
-    const [procuctCount,setProductCount] = useState(0);
     const getAllproducts = async() => {
         try {
             const res = await axios.get(`${BACKEND_URL}/product/getallproducts`,)

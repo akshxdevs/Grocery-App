@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 import { cartState, totalAmountState } from "../recoil/atom";
 import LoginModal from "./LoginComponent";
-import { log } from "node:console";
 
 export const AppBar = () => {
     const router = useRouter();

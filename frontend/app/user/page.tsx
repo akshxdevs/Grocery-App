@@ -3,15 +3,47 @@
 import { useRouter } from "next/navigation";
 import { AppBar } from "../Components/AppBar";
 import { useEffect, useState } from "react";
+import axios from "axios";
+import { BACKEND_URL } from "../config";
 
 export default function(){
     const router = useRouter()
     const [isLogin,setIsLogin] = useState(false);
-
+    const [userId,setuserId] = useState<string|null>(null);
+    const [token,setToken] = useState<string|null>(null);
+    const [mobileNo,setMobileNo] = useState<string|null>(null)
+    const [orders,setorder] = useState<any[]>([]);
+    
+    const getAllorders = async() => {
+        try {
+            const res = await axios.get(`${BACKEND_URL}/order/getorders/${userId}`,{
+                headers:{
+                    authorization:token
+                }
+            })
+            if (res.data) {
+                const data = res.data
+                console.log("orders fetched",data);
+                setorder([data.getAllOrders]);
+            }
+        } catch (error) {
+            console.error("❌ Something went wrong", error);   
+        }
+    }
     useEffect(()=>{
         const storedUserId = localStorage.getItem("userId");
-        if (storedUserId) return setIsLogin(true) 
+        const storedToken = localStorage.getItem("token");
+        const storedMobileNo = localStorage.getItem("mobileNo");
+        if (storedUserId && storedMobileNo) {
+            setMobileNo(storedMobileNo);
+            setuserId(storedUserId);
+            setIsLogin(true) ;
+        }
+        if (storedToken) setToken(storedToken);
     },[])
+    useEffect(()=>{
+        if (userId && token) getAllorders()
+    },[userId,token])
     return <div>
         <AppBar/>
         <div className=" p-20">
@@ -28,7 +60,7 @@ export default function(){
                             </div>
                                 <div className="">
                                     <h1>akash</h1>
-                                    <p>mobileNo</p>
+                                    <p>{mobileNo}</p>
                                 </div>
                             </div>
                             <div className="py-20">
@@ -54,8 +86,7 @@ export default function(){
                                     <button onClick={()=>{
                                         localStorage.removeItem("token")
                                         localStorage.removeItem("userId")
-                                        router.push("/home")
-                                        window.location.reload();
+                                        router.push("/home");
                                     }}>
                                     Logout
                                     </button>
@@ -67,14 +98,32 @@ export default function(){
                             order history
                     </div>
                         <div>
-
+                            {orders.length > 0 ? (
+                            orders.map((order,index)=>(
+                                <div key={index}>
+                                    <p>Order ID: {order.id}</p>
+                                    <p>Status: {order.orderStatus}</p>
+                                    <p>products: </p>{order.products.map((product:any,index:any)=>(
+                                        <div key={index}>
+                                            <img src={product.productImg} alt="" />
+                                            {product.productName}
+                                        </div>
+                                    ))}
+                                    <p>Payment: {order.paymentMethord}</p>
+                                </div>
+                            ))
+                        ) : (
+                            <div className="flex justify-center items-center h-screen">
+                                <p>No orders found.</p>
+                            </div>
+                        )}
                         </div>
                     </div>
                 </div>
             )}
         </div>
         {!isLogin && (
-            <div className="flex justify-center items-center h-[800px]">
+            <div className="flex justify-center items-center h-[200px]">
                 <button type="button" className="text-red-700 w-40 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900" onClick={()=>{
                     router.push("/login")
                 }}>Login</button>

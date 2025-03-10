@@ -6,19 +6,19 @@ const router = Router();
 
 router.get("/getorders/:id",UserAuthenticate,async(req,res)=>{
     try {
-        const orderId = req.params.id ;
-        const {userId} = req.body;
-        if (!orderId ||!userId) {
+        const userId = req.params.id;
+        if (!userId) {
             return res.status(403).json({message:"Invalid Inputs!"})
         }
-        const order = await prismaClient.order.findFirst({
+        const getAllOrders = await prismaClient.order.findFirst({
             where:{
-                id:orderId,
-                userId:userId
+                userId:userId,
+            },include:{
+                products:true
             }
         })
-        if (!order) return res.status(402).json({message:[]})
-        res.json({order});
+        if (!getAllOrders) return res.status(402).json({message:[]})
+        res.json({getAllOrders});
         } catch (error) {
             console.error(error);
             res.status(411).json({message:"Something went wrong!!"})   
@@ -28,7 +28,8 @@ router.get("/getorders/:id",UserAuthenticate,async(req,res)=>{
 router.post("/place-order/:id",UserAuthenticate,async(req,res)=>{
     try {
         const userId = req.params.id ;
-        const productId = req.body
+        const productId = req.body.productId
+        const productIds = Array.isArray(productId) ? productId : [productId]
         if (!userId || !productId) {
             return res.status(403).json({message:"Invalid Inputs!"})
         }
@@ -36,7 +37,7 @@ router.post("/place-order/:id",UserAuthenticate,async(req,res)=>{
             data:{
                 userId:userId,
                 products:{
-                    connect:productId.map((id:string)=>({id}))
+                    connect:productIds.map((id:string)=>({id}))
                 },
                 paymentMethord:"ONLINEPAYMENT",
                 orderStatus:"PACKED"
