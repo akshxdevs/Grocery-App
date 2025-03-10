@@ -37,17 +37,22 @@ router.get("/getorders/:id", (req, res) => __awaiter(void 0, void 0, void 0, fun
 }));
 router.post("/place-order/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const productId = req.params.id;
-        const { userId } = req.body;
-        if (!productId || !userId) {
+        const userId = req.params.id;
+        const productId = req.body;
+        if (!userId || !productId) {
             return res.status(403).json({ message: "Invalid Inputs!" });
         }
         const order = yield db_1.prismaClient.order.create({
             data: {
                 userId: userId,
-                productId: productId,
-                paymentMethord: "CASHONDELIVERY",
+                products: {
+                    connect: productId.map((id) => ({ id }))
+                },
+                paymentMethord: "ONLINEPAYMENT",
                 orderStatus: "PACKED"
+            },
+            include: {
+                products: true
             }
         });
         if (!order)

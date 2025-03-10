@@ -1,9 +1,10 @@
 import { Router } from "express";
 import { prismaClient } from "../db/db";
+import { UserAuthenticate } from "../middleware";
 
 const router = Router();
 
-router.get("/getorders/:id",async(req,res)=>{
+router.get("/getorders/:id",UserAuthenticate,async(req,res)=>{
     try {
         const orderId = req.params.id ;
         const {userId} = req.body;
@@ -24,19 +25,24 @@ router.get("/getorders/:id",async(req,res)=>{
         }
 });
 
-router.post("/place-order/:id",async(req,res)=>{
+router.post("/place-order/:id",UserAuthenticate,async(req,res)=>{
     try {
-        const productId = req.params.id ;
-        const {userId} = req.body;
-        if (!productId ||!userId) {
+        const userId = req.params.id ;
+        const productId = req.body
+        if (!userId || !productId) {
             return res.status(403).json({message:"Invalid Inputs!"})
         }
         const order = await prismaClient.order.create({
             data:{
                 userId:userId,
-                productId:productId,
-                paymentMethord:"CASHONDELIVERY",
+                products:{
+                    connect:productId.map((id:string)=>({id}))
+                },
+                paymentMethord:"ONLINEPAYMENT",
                 orderStatus:"PACKED"
+            },
+            include:{
+                products:true
             }
         })
         if (!order) return res.status(402).json({message:"Order failed"})

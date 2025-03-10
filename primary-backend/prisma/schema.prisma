@@ -42,7 +42,7 @@ model Product {
   productImg String
   stock Int
   stockStatus STOCK_STATUS   
-  orderPlaced Order[]
+  orders Order[] @relation("OrderProducts")
   companyId String
   admin Admin @relation(fields: [companyId],references: [id]) 
 }
@@ -50,11 +50,10 @@ model Product {
 model Order {
   id String @id @default(uuid())
   userId String
-  productId String
+  products Product[] @relation("OrderProducts")
   paymentMethord PAYMENT_METHORD
   orderStatus ORDER_STATUS
   user User @relation(fields: [userId],references: [id])
-  product Product @relation(fields: [productId],references: [id])
 }
 
 enum STOCK_STATUS {
