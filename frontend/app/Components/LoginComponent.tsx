@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Dispatch, SetStateAction, useEffect, useState } from "react"
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react"
 import { BACKEND_URL } from "../config";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
@@ -12,6 +12,7 @@ export default function LoginModal({ setLoginModel }: Props) {
     const [phoneNo,setPhoneNo] = useState();
     const [otp,setOtp] = useState();
     const [otpModel,setOtpModel] = useState(false);
+    const modelRef = useRef<HTMLDivElement>(null);
     const router = useRouter();
     useEffect(()=>{
         document.body.style.overflow = "hidden";
@@ -19,11 +20,20 @@ export default function LoginModal({ setLoginModel }: Props) {
         return () => {
             document.body.style.overflow = "auto"
         }
-        
+    },[])
+
+    useEffect(()=>{
+        const handleOutsideClick = (e:MouseEvent) => {
+            if (modelRef.current && !modelRef.current.contains(e.target as Node)) {
+                setLoginModel(false)
+            }
+        };
+        window.addEventListener("mousedown",handleOutsideClick);
+        return () => window.removeEventListener("mousedown",handleOutsideClick);
     },[])
 
     return <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center" >
-        <div className="bg-white rounded-lg shodow-lg py-10 px-20">
+        <div ref={modelRef} className="bg-white rounded-lg shodow-lg py-10 px-20">
             {otpModel ? (
                 <div>
                     <h1 className="text-4xl font-bold">OTP Verification</h1>

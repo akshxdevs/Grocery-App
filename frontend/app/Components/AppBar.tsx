@@ -29,7 +29,7 @@ export const AppBar = () => {
           document.body.style.overflow = 'auto';
         }
       }, [showCartModel]);
-    return <div className="">
+    return <div className="fixed w-full">
         <div className="flex justify-between p-5 bg-white">
             <div className="px-2">
                 <button className="text-4xl font-semibold" onClick={()=>{

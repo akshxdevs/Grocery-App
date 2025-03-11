@@ -29,10 +29,12 @@ export default function(){
     }
     return <div> 
         <AppBar/>
-        <Card/>
+        <div className="pt-14">
+            <Card/>
+        </div>
         <div className="">
-            <h1 className="py-10 px-40 text-lg font-semibold">Products</h1>
-            <div className="px-60">
+            <h1 className="py-3 px-40 text-lg font-semibold">Products</h1>
+            <div className="px-60 py-2">
                 {products.length > 0 ? (
                     <div className="grid grid-cols-4 gap-10">
                         {products.map((product,index)=>(

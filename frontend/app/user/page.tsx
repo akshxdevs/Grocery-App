@@ -14,6 +14,7 @@ export default function(){
     const [mobileNo,setMobileNo] = useState<string|null>(null)
     const [orders,setorder] = useState<any[]>([]);
     const [totalPrice,setTotalPrice] = useState<number>();
+    const [showOrderHistory,setShowOrderHistory] = useState(true)
     const getAllorders = async() => {
         try {
             const res = await axios.get(`${BACKEND_URL}/order/getorders/${userId}`,{
@@ -66,9 +67,11 @@ export default function(){
                                     <p>{mobileNo}</p>
                                 </div>
                             </div>
-                            <div className="py-20">
-                                <div className="flex px-10 gap-5 py-3 border border-green-700 shadow-xl rounded-lg">
-                                    <button>
+                            <div className="py-10">
+                                <div className={`flex px-10 gap-5 py-3 border border-green-700 rounded-lg transition-transform duration-150 active:scale-95 ${showOrderHistory ? 'bg-green-600 text-white' : 'bg-gray-200 text-black'}`}>
+                                    <button onClick={()=>{
+                                        setShowOrderHistory((prev)=>!prev)
+                                    }}>
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-6">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
                                         </svg>
@@ -127,7 +130,7 @@ export default function(){
                                 </div>
                             </div>
                         </div>
-                    <div className="w-full  bg-slate-200">
+                    <div className="w-full  bg-slate-200 border">
                         <div className="flex flex-row">
                             <div className="bg-white w-full py-4 px-4">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-6">
@@ -138,7 +141,8 @@ export default function(){
                                     Orders
                             </div>
                         </div>
-                    <div className="flex justify-center items-center p-10 w-full">
+                    {showOrderHistory ? (
+                        <div className="flex justify-center items-center p-10 w-full">
                         <div className="w-full">
                                 {orders.length > 0 ? (
                                 orders.map((order,index)=>(
@@ -172,11 +176,16 @@ export default function(){
                                     <p>No orders found.</p>
                                 </div>
                             )}
-                            </div>
                         </div>
                     </div>
+                    ):(
+                        <div>
+                            <p></p>
+                        </div>
+                    )}
                 </div>
-            )}
+            </div>
+        )}
         </div>
         {!isLogin && (
             <div className="flex justify-center items-center h-[200px]">
