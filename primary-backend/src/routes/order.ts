@@ -10,7 +10,7 @@ router.get("/getorders/:id",UserAuthenticate,async(req,res)=>{
         if (!userId) {
             return res.status(403).json({message:"Invalid Inputs!"})
         }
-        const getAllOrders = await prismaClient.order.findFirst({
+        const getAllOrders = await prismaClient.order.findMany({
             where:{
                 userId:userId,
             },include:{
@@ -28,14 +28,16 @@ router.get("/getorders/:id",UserAuthenticate,async(req,res)=>{
 router.post("/place-order/:id",UserAuthenticate,async(req,res)=>{
     try {
         const userId = req.params.id ;
-        const productId = req.body.productId
+        const productId = req.body.productId;
+        const totalPrice = req.body.totalPrice;
         const productIds = Array.isArray(productId) ? productId : [productId]
-        if (!userId || !productId) {
+        if (!userId || !productId ||!totalPrice) {
             return res.status(403).json({message:"Invalid Inputs!"})
         }
         const order = await prismaClient.order.create({
             data:{
                 userId:userId,
+                totalPrice:totalPrice,
                 products:{
                     connect:productIds.map((id:string)=>({id}))
                 },

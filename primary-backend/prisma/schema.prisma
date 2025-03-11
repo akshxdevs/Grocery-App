@@ -53,7 +53,9 @@ model Order {
   products Product[] @relation("OrderProducts")
   paymentMethord PAYMENT_METHORD
   orderStatus ORDER_STATUS
+  totalPrice Float @default(0)
   user User @relation(fields: [userId],references: [id])
+  orderPlacedOn DateTime @default(now())
 }
 
 enum STOCK_STATUS {

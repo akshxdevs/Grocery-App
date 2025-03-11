@@ -20,7 +20,7 @@ router.get("/getorders/:id", middleware_1.UserAuthenticate, (req, res) => __awai
         if (!userId) {
             return res.status(403).json({ message: "Invalid Inputs!" });
         }
-        const getAllOrders = yield db_1.prismaClient.order.findFirst({
+        const getAllOrders = yield db_1.prismaClient.order.findMany({
             where: {
                 userId: userId,
             }, include: {
@@ -40,13 +40,15 @@ router.post("/place-order/:id", middleware_1.UserAuthenticate, (req, res) => __a
     try {
         const userId = req.params.id;
         const productId = req.body.productId;
+        const totalPrice = req.body.totalPrice;
         const productIds = Array.isArray(productId) ? productId : [productId];
-        if (!userId || !productId) {
+        if (!userId || !productId || !totalPrice) {
             return res.status(403).json({ message: "Invalid Inputs!" });
         }
         const order = yield db_1.prismaClient.order.create({
             data: {
                 userId: userId,
+                totalPrice: totalPrice,
                 products: {
                     connect: productIds.map((id) => ({ id }))
                 },

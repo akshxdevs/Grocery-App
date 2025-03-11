@@ -32,7 +32,9 @@ export const AppBar = () => {
     return <div className="">
         <div className="flex justify-between p-5 bg-white">
             <div className="px-2">
-                <h1 className="text-4xl font-semibold">zepto</h1>
+                <button className="text-4xl font-semibold" onClick={()=>{
+                    router.push("/home")
+                }}>zepto</button>
             </div>
             <div className="flex gap-1 py-2 pl-5">
                 <div className="">

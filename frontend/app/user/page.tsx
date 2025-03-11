@@ -13,7 +13,7 @@ export default function(){
     const [token,setToken] = useState<string|null>(null);
     const [mobileNo,setMobileNo] = useState<string|null>(null)
     const [orders,setorder] = useState<any[]>([]);
-    
+    const [totalPrice,setTotalPrice] = useState<number>();
     const getAllorders = async() => {
         try {
             const res = await axios.get(`${BACKEND_URL}/order/getorders/${userId}`,{
@@ -24,7 +24,10 @@ export default function(){
             if (res.data) {
                 const data = res.data
                 console.log("orders fetched",data);
-                setorder([data.getAllOrders]);
+                setorder(data.getAllOrders);
+                console.log(totalPrice);                
+                const summary = data.getAllOrders.flatMap((orders:any)=>orders.products).reduce((total:any,product:any)=> total+product.productPrice,0);
+                setTotalPrice(summary);
             }
         } catch (error) {
             console.error("❌ Something went wrong", error);   
@@ -46,11 +49,11 @@ export default function(){
     },[userId,token])
     return <div>
         <AppBar/>
-        <div className=" p-20">
+        <div className=" py-10 px-32">
             {isLogin && (
                 <div className="flex justify-between">
-                    <div className="border rounded-lg shadow-lg">
-                        <div className="flex gap-3 pt-5 px-10">
+                    <div className="border rounded-lg shadow-lg w-96">
+                        <div className="flex gap-3 pt-5 px-10 ">
                             <div className="py-2">
                                 <button>
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-10">
@@ -64,59 +67,112 @@ export default function(){
                                 </div>
                             </div>
                             <div className="py-20">
-                                <div className="border py-3 ">
+                                <div className="flex px-10 gap-5 py-3 border border-green-700 shadow-xl rounded-lg">
+                                    <button>
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-6">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+                                        </svg>
+                                    </button>
                                     <h1 className="">Orders</h1>
                                 </div>
-                                <div className="border py-3 ">
+                                <div className="flex px-10 gap-5 py-3 border ">
+                                    <button>
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-6">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 0 1-2.555-.337A5.972 5.972 0 0 1 5.41 20.97a5.969 5.969 0 0 1-.474-.065 4.48 4.48 0 0 0 .978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25Z" />
+                                        </svg>
+                                    </button>
                                     Customer Support
                                 </div>
-                                <div className="border py-3 ">
+                                <div className="flex px-10 gap-5 py-3 border  ">
+                                    <button>
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-6">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" />
+                                        </svg>
+                                    </button>
                                     Manage Referrals
                                 </div>
-                                <div className="border py-3 ">
+                                <div className="flex px-10 gap-5 py-3 border ">
+                                    <button>
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-6">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
+                                        </svg>
+                                    </button>
                                     Address
                                 </div>
-                                <div className="border py-3 ">
+                                <div className="flex px-10 gap-5 py-3 border ">
+                                    <button>
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-6">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                        </svg>
+                                    </button>
                                     Profile
                                 </div>
-                                <div className="border py-3 ">
+                                <div className="flex px-10 gap-5 py-3 border  ">
+                                    <button>
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-6">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a2.25 2.25 0 0 0-2.25-2.25H15a3 3 0 1 1-6 0H5.25A2.25 2.25 0 0 0 3 12m18 0v6a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 18v-6m18 0V9M3 12V9m18 0a2.25 2.25 0 0 0-2.25-2.25H5.25A2.25 2.25 0 0 0 3 9m18 0V6a2.25 2.25 0 0 0-2.25-2.25H5.25A2.25 2.25 0 0 0 3 6v3" />
+                                        </svg>      
+                                    </button>
                                     Wallet
                                 </div>
-                                <div className="py-14 px-36">
+                                <div className="flex w-full justify-center items-center h-40">
                                     <button onClick={()=>{
                                         localStorage.removeItem("token")
                                         localStorage.removeItem("userId")
                                         router.push("/home");
                                     }}>
-                                    Logout
+                                    Log Out
                                     </button>
                                 </div>
                             </div>
                         </div>
-                    <div className=" w-full  bg-slate-200">
-                    <div className="border bg-white px-10 w-ful ">
-                            order history
-                    </div>
-                        <div>
-                            {orders.length > 0 ? (
-                            orders.map((order,index)=>(
-                                <div key={index}>
-                                    <p>Order ID: {order.id}</p>
-                                    <p>Status: {order.orderStatus}</p>
-                                    <p>products: </p>{order.products.map((product:any,index:any)=>(
-                                        <div key={index}>
-                                            <img src={product.productImg} alt="" />
-                                            {product.productName}
-                                        </div>
-                                    ))}
-                                    <p>Payment: {order.paymentMethord}</p>
-                                </div>
-                            ))
-                        ) : (
-                            <div className="flex justify-center items-center h-screen">
-                                <p>No orders found.</p>
+                    <div className="w-full  bg-slate-200">
+                        <div className="flex flex-row">
+                            <div className="bg-white w-full py-4 px-4">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+                                </svg>
                             </div>
-                        )}
+                            <div className="bg-white w-full py-4 flex-none">
+                                    Orders
+                            </div>
+                        </div>
+                    <div className="flex justify-center items-center p-10 w-full">
+                        <div className="w-full">
+                                {orders.length > 0 ? (
+                                orders.map((order,index)=>(
+                                    <div key={index} className="mb-10 border border-slate-300 w-full bg-white rounded-2xl shadow-lg">
+                                        <div className="flex px-5">
+                                            {order.products?.map((product:any,index:any)=>(
+                                                <div key={index} className="p-3">
+                                                    <div className="p-1 border rounded-lg">
+                                                        <img src={product.productImg} alt="" className="w-20 h-20  object-cover rounded-lg"/>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                        <p className="font-bold px-10">Order {order.orderStatus}</p>
+                                        <p className="font-light text-slate-400 px-10">#{order.id}</p>
+                                        <div className="flex justify-between pr-10">
+                                            <div>
+                                                <p className="font-light text-slate-400 px-10">{order.orderPlacedOn}</p>
+                                            </div>
+                                            <div className="font-bold">
+                                                ₹{order.totalPrice}
+                                            </div>
+                                        </div>
+                                        <div className="w-full p-5 border font-bold text-center">
+                                            <button className="">Rate your order</button>
+                                        </div>
+                                    </div>
+                                ))
+                            ) : (
+                                <div className="flex justify-center items-center h-screen">
+                                    <p>No orders found.</p>
+                                </div>
+                            )}
+                            </div>
                         </div>
                     </div>
                 </div>

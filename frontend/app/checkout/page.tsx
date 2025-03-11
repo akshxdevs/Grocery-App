@@ -27,6 +27,7 @@ export default function () {
             console.log(token);
             
             const res = await axios.post(`${BACKEND_URL}/order/place-order/${userId}`,{
+                totalPrice:totalAmount,
                 productId:productIds,
             },{
                 headers:{
