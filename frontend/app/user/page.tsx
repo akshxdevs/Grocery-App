@@ -5,17 +5,22 @@ import { AppBar } from "../Components/AppBar";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { BACKEND_URL } from "../config";
+import { toast } from "react-toastify";
 
 export default function(){
     const router = useRouter()
     const [isLogin,setIsLogin] = useState(false);
     const [userId,setuserId] = useState<string|null>(null);
     const [token,setToken] = useState<string|null>(null);
+    const [profileName,setProfileName] = useState<string|null>(null);
     const [mobileNo,setMobileNo] = useState<string|null>(null)
     const [orders,setorder] = useState<any[]>([]);
     const [totalPrice,setTotalPrice] = useState<number>();
     const [showOrderHistory,setShowOrderHistory] = useState(true)
-    const [showAddress,setShowAddress] = useState(true)
+    const [showAddress,setShowAddress] = useState(false)
+    const [showUserProfile,setShowUserProfile] = useState(false)
+    const [name,setName] = useState("");
+    const [username,setUsername] = useState("");
     const getAllorders = async() => {
         try {
             const res = await axios.get(`${BACKEND_URL}/order/getorders/${userId}`,{
@@ -39,11 +44,14 @@ export default function(){
         const storedUserId = localStorage.getItem("userId");
         const storedToken = localStorage.getItem("token");
         const storedMobileNo = localStorage.getItem("mobileNo");
+        const storedName = localStorage.getItem("name");
+    
         if (storedUserId && storedMobileNo) {
             setMobileNo(storedMobileNo);
             setuserId(storedUserId);
             setIsLogin(true) ;
         }
+        if (storedName) setProfileName(storedName) 
         if (storedToken) setToken(storedToken);
     },[])
     useEffect(()=>{
@@ -64,13 +72,15 @@ export default function(){
                                 </button>
                             </div>
                                 <div className="">
-                                    <h1>akash</h1>
+                                    <h1>{profileName}</h1>
                                     <p>{mobileNo}</p>
                                 </div>
                             </div>
                             <div className="py-10">
-                                <div className={`flex px-10 gap-5 py-3 border border-green-700 rounded-lg transition-transform duration-150 active:scale-95 ${showOrderHistory ? 'bg-green-600 text-white' : 'text-black'}`}>
+                                <div className={`flex px-10 gap-5 py-3 border rounded-lg transition-transform duration-150 active:scale-95 ${showOrderHistory ? 'bg-green-600 text-white' : 'text-black'}`}>
                                     <button onClick={()=>{
+                                        setShowUserProfile(false)
+                                        setShowAddress(false)
                                         setShowOrderHistory((prev)=>!prev)
                                     }}>
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-6">
@@ -95,10 +105,11 @@ export default function(){
                                     </button>
                                     Manage Referrals
                                 </div>
-                                <div className="flex px-10 gap-5 py-3 border ">
+                                <div className={`flex px-10 gap-5 py-3 border rounded-lg transition-transform duration-150 active:scale-95 ${showAddress ? 'bg-green-600 text-white' : 'text-black'}`}>
                                     <button onClick={()=>{
+                                        setShowUserProfile(false)
                                         setShowOrderHistory(false)
-                                        setShowAddress(true)
+                                        setShowAddress((prev)=>!prev)
                                     }}>
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-6">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
@@ -107,8 +118,12 @@ export default function(){
                                     </button>
                                     Address
                                 </div>
-                                <div className="flex px-10 gap-5 py-3 border ">
-                                    <button>
+                                <div className={`flex px-10 gap-5 py-3 border rounded-lg transition-transform duration-150 active:scale-95 ${showUserProfile ? 'bg-green-600 text-white' : 'text-black' }`}>
+                                    <button onClick={()=>{
+                                        setShowAddress(false);
+                                        setShowOrderHistory(false);
+                                        setShowUserProfile((prev)=>!prev);
+                                    }}>
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-6">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
                                         </svg>
@@ -196,6 +211,39 @@ export default function(){
                                             </button>
                                         </div> 
                                     </div>
+                                </div>
+                            )}
+                        </div>
+                        <div>
+                            {showUserProfile && (
+                                <div className="px-10 border w-full bg-white">
+                                        <div className="">
+                                            <h1 className="text-slate-500 p-3">Name*</h1>
+                                            <input type="text" placeholder={`${name}`} className="p-3 w-full border border-slate-400 rounded-lg" onChange={(e)=>setName(e.target.value)}/>
+                                        </div>
+                                        <div className="">
+                                            <h1 className="text-slate-500 p-3">Email Address*</h1>
+                                            <input type="text" placeholder="-" className="p-3 w-full border border-slate-400 rounded-lg" onChange={(e)=>setUsername(e.target.value)}/>
+                                        </div>
+                                        <p className="text-slate-400">We promise not to spam you</p>
+                                        <div className="flex flex-row-reverse">
+                                            <div className="bg-pink-500 text-white m-10 w-40 p-3 rounded-lg shadow-sm text-center">
+                                                <button onClick={async()=>{
+                                                    try {
+                                                        const res = await axios.put(`${BACKEND_URL}/user/update/${userId}`,{
+                                                            name:name,
+                                                            username:username
+                                                        });
+                                                        if (res.data) {
+                                                            toast.success("User Successfully Updated!!");
+                                                        }
+                                                    } catch (error) {
+                                                        console.error(error);
+                                                        toast.error("Something went wrong!!");
+                                                    }
+                                                }}>Submit</button>
+                                            </div>
+                                        </div>
                                 </div>
                             )}
                         </div>
