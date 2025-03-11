@@ -30,7 +30,8 @@ export const AppBar = () => {
         }
       }, [showCartModel]);
     return <div className="fixed w-full">
-        <div className="flex justify-between p-5 bg-white">
+            <div className="absolute top- left- w-full h-auto bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 blur-[10px] opacity-100  shadow-[2px_2px_30px_10px_rgba(255,0,255,0.5)]"></div>
+            <div className="flex justify-between p-5 bg-white">
             <div className="px-2">
                 <button className="text-4xl font-semibold" onClick={()=>{
                     router.push("/home")

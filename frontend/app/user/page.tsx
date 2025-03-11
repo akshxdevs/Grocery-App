@@ -50,7 +50,7 @@ export default function(){
     },[userId,token])
     return <div>
         <AppBar/>
-        <div className=" py-10 px-32">
+        <div className=" p-32">
             {isLogin && (
                 <div className="flex justify-between">
                     <div className="border rounded-lg shadow-lg w-96">
@@ -68,7 +68,7 @@ export default function(){
                                 </div>
                             </div>
                             <div className="py-10">
-                                <div className={`flex px-10 gap-5 py-3 border border-green-700 rounded-lg transition-transform duration-150 active:scale-95 ${showOrderHistory ? 'bg-green-600 text-white' : 'bg-gray-200 text-black'}`}>
+                                <div className={`flex px-10 gap-5 py-3 border border-green-700 rounded-lg transition-transform duration-150 active:scale-95 ${showOrderHistory ? 'bg-green-600 text-white' : 'text-black'}`}>
                                     <button onClick={()=>{
                                         setShowOrderHistory((prev)=>!prev)
                                     }}>
@@ -156,7 +156,7 @@ export default function(){
                                                 </div>
                                             ))}
                                         </div>
-                                        <p className="font-bold px-10">Order {order.orderStatus}</p>
+                                        <p className="font-bold px-10">Order {order.orderStatus}✅</p>
                                         <p className="font-light text-slate-400 px-10">#{order.id}</p>
                                         <div className="flex justify-between pr-10">
                                             <div>
