@@ -15,6 +15,7 @@ export default function(){
     const [orders,setorder] = useState<any[]>([]);
     const [totalPrice,setTotalPrice] = useState<number>();
     const [showOrderHistory,setShowOrderHistory] = useState(true)
+    const [showAddress,setShowAddress] = useState(true)
     const getAllorders = async() => {
         try {
             const res = await axios.get(`${BACKEND_URL}/order/getorders/${userId}`,{
@@ -95,7 +96,10 @@ export default function(){
                                     Manage Referrals
                                 </div>
                                 <div className="flex px-10 gap-5 py-3 border ">
-                                    <button>
+                                    <button onClick={()=>{
+                                        setShowOrderHistory(false)
+                                        setShowAddress(true)
+                                    }}>
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-6">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
@@ -141,51 +145,63 @@ export default function(){
                                     Orders
                             </div>
                         </div>
-                    {showOrderHistory ? (
-                        <div className="flex justify-center items-center p-10 w-full">
-                        <div className="w-full">
-                                {orders.length > 0 ? (
-                                orders.map((order,index)=>(
-                                    <div key={index} className="mb-10 border border-slate-300 w-full bg-white rounded-2xl shadow-lg">
-                                        <div className="flex px-5">
-                                            {order.products?.map((product:any,index:any)=>(
-                                                <div key={index} className="p-3">
-                                                    <div className="p-1 border rounded-lg">
-                                                        <img src={product.productImg} alt="" className="w-20 h-20  object-cover rounded-lg"/>
+                        {showOrderHistory && (
+                            <div className="flex justify-center items-center p-10 w-full">
+                            <div className="w-full">
+                                    {orders.length > 0 ? (
+                                    orders.map((order,index)=>(
+                                        <div key={index} className="mb-10 border border-slate-300 w-full bg-white rounded-2xl shadow-lg">
+                                            <div className="flex px-5">
+                                                {order.products?.map((product:any,index:any)=>(
+                                                    <div key={index} className="p-3">
+                                                        <div className="p-1 border rounded-lg">
+                                                            <img src={product.productImg} alt="" className="w-20 h-20  object-cover rounded-lg"/>
+                                                        </div>
                                                     </div>
+                                                ))}
+                                            </div>
+                                            <p className="font-bold px-10">Order {order.orderStatus}✅</p>
+                                            <p className="font-light text-slate-400 px-10">#{order.id}</p>
+                                            <div className="flex justify-between pr-10">
+                                                <div>
+                                                    <p className="font-light text-slate-400 px-10">{order.orderPlacedOn}</p>
                                                 </div>
-                                            ))}
-                                        </div>
-                                        <p className="font-bold px-10">Order {order.orderStatus}✅</p>
-                                        <p className="font-light text-slate-400 px-10">#{order.id}</p>
-                                        <div className="flex justify-between pr-10">
-                                            <div>
-                                                <p className="font-light text-slate-400 px-10">{order.orderPlacedOn}</p>
+                                                <div className="font-bold">
+                                                    ₹{order.totalPrice}
+                                                </div>
                                             </div>
-                                            <div className="font-bold">
-                                                ₹{order.totalPrice}
+                                            <div className="w-full p-5 border font-bold text-center">
+                                                <button className="">Rate your order</button>
                                             </div>
                                         </div>
-                                        <div className="w-full p-5 border font-bold text-center">
-                                            <button className="">Rate your order</button>
-                                        </div>
+                                    ))
+                                ) : (
+                                    <div className="flex justify-center items-center h-screen">
+                                        <p>No orders found.</p>
                                     </div>
-                                ))
-                            ) : (
-                                <div className="flex justify-center items-center h-screen">
-                                    <p>No orders found.</p>
+                                )}
+                            </div>
+                        </div>
+                        )}
+                        <div>
+                            {showAddress && (
+                                <div className="bg-white">
+                                    <div className="flex justify-between p-10 border border-y">
+                                        <div className="font-bold">
+                                            <h1 className="">All Saved Address</h1>
+                                        </div>
+                                        <div className="bg-pink-600 text-white border p-2 rounded-lg shadow-sm">
+                                            <button className="">
+                                                Add New Address
+                                            </button>
+                                        </div> 
+                                    </div>
                                 </div>
                             )}
                         </div>
                     </div>
-                    ):(
-                        <div>
-                            <p></p>
-                        </div>
-                    )}
                 </div>
-            </div>
-        )}
+            )}
         </div>
         {!isLogin && (
             <div className="flex justify-center items-center h-[200px]">
