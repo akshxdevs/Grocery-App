@@ -26,6 +26,28 @@ router.get("/getallproducts",async(req,res)=>{
     }
 })
 
+router.get("/getallproducts/:id",AdminAuthenticate,async(req,res)=>{
+    try {
+        const companyId = req.params.id
+        const getAllProducts = await prismaClient.product.findFirst({
+            where:{
+                companyId:companyId
+            }
+        });
+        if (!getAllProducts) {
+            return res.send(402).json({
+                message:"No products"
+            })
+        }
+        res.json({
+            getAllProducts
+        })
+    } catch (error) {
+        console.error(error);
+        res.status(411).json({message:"Something went wrong!!"})   
+    }
+})
+
 router.post("/addproduct/:id",AdminAuthenticate,async(req,res)=>{
     try {
         const companyId = req.params.id;

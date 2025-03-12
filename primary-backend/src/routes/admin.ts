@@ -69,11 +69,13 @@ router.post("/signin",async(req,res)=>{
         res.json({
             message:"Admin Login Successfully!",
             token:token,
-            admin:admin        })
+            admin:admin})
     } catch (error) {
         console.error(error);
         res.status(411).json({message:"Something went wrong!!"})   
     }
 })
+
+
 
 export const AdminRouter = router;

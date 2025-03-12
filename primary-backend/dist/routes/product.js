@@ -33,6 +33,28 @@ router.get("/getallproducts", (req, res) => __awaiter(void 0, void 0, void 0, fu
         res.status(411).json({ message: "Something went wrong!!" });
     }
 }));
+router.get("/getallproducts/:id", middleware_1.AdminAuthenticate, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const companyId = req.params.id;
+        const getAllProducts = yield db_1.prismaClient.product.findFirst({
+            where: {
+                companyId: companyId
+            }
+        });
+        if (!getAllProducts) {
+            return res.send(402).json({
+                message: "No products"
+            });
+        }
+        res.json({
+            getAllProducts
+        });
+    }
+    catch (error) {
+        console.error(error);
+        res.status(411).json({ message: "Something went wrong!!" });
+    }
+}));
 router.post("/addproduct/:id", middleware_1.AdminAuthenticate, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const companyId = req.params.id;
