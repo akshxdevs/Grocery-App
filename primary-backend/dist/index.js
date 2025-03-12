@@ -16,6 +16,7 @@ app.use((0, cors_1.default)());
 app.use("/api/v1/user", user_1.UserRouter);
 app.use("/api/v1/product", product_1.productRouter);
 app.use("/api/v1/admin", admin_1.AdminRouter);
+``;
 app.use("/api/v1/order", order_1.orderRouter);
 app.listen(config_1.PORT || 3000, () => {
     console.log(`server running on port ${config_1.PORT || "3000"}`);

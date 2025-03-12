@@ -11,7 +11,7 @@ app.use(cors());
 
 app.use("/api/v1/user",UserRouter);
 app.use("/api/v1/product",productRouter);
-app.use("/api/v1/admin",AdminRouter);
+app.use("/api/v1/admin",AdminRouter);``
 app.use("/api/v1/order",orderRouter);
 
 app.listen(PORT||3000,()=>{

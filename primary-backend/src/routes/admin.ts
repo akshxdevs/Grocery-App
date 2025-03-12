@@ -54,6 +54,7 @@ router.post("/signin",async(req,res)=>{
         const admin = await prismaClient.admin.findFirst({
             where:{
                 username,
+                password
             }
         })
         if (!admin) {
@@ -61,10 +62,7 @@ router.post("/signin",async(req,res)=>{
                 message:"Admin Not Exist / Signup!"
             })
         }
-        const comparePassword = await bcrypt.compare(password,admin.password)
-        if (!comparePassword) {
-            return res.status(403).json({message:"Password Mismatch!"})
-        }
+
         const token = jwt.sign({
             id:admin.id
         },JWT_SECRET as string)
