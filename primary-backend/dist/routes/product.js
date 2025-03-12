@@ -36,7 +36,7 @@ router.get("/getallproducts", (req, res) => __awaiter(void 0, void 0, void 0, fu
 router.get("/getallproducts/:id", middleware_1.AdminAuthenticate, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const companyId = req.params.id;
-        const getAllProducts = yield db_1.prismaClient.product.findFirst({
+        const getAllProducts = yield db_1.prismaClient.product.findMany({
             where: {
                 companyId: companyId
             }

@@ -1,5 +1,5 @@
 "use client"
-import { useRecoilValue } from "recoil"
+import { useRecoilValue, useResetRecoilState } from "recoil"
 import { cartState, totalAmountState } from "../recoil/atom"
 import axios from "axios";
 import { BACKEND_URL } from "../config";
@@ -12,6 +12,7 @@ export default function () {
     const [userId,setuserId] = useState<string|null>(null);
     const [token,setToken] = useState<string|null>(null);
     const cart = useRecoilValue(cartState);
+    const resetCart = useResetRecoilState(cartState);
     const router = useRouter();
     const productIds = cart.map((ids)=>ids.productId);
     console.log(productIds);
@@ -38,6 +39,7 @@ export default function () {
                 console.log("order placed");
                 toast.success("✅ Order Placed Successfully!!")
                 router.push("/home")
+                resetCart();
             }
         } catch (error) {
             console.error("❌ Something went wrong", error);   

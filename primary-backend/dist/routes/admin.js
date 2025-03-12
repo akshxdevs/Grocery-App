@@ -67,13 +67,16 @@ router.post("/signin", (req, res) => __awaiter(void 0, void 0, void 0, function*
         const admin = yield db_1.prismaClient.admin.findFirst({
             where: {
                 username,
-                password
             }
         });
         if (!admin) {
             return res.status(402).json({
                 message: "Admin Not Exist / Signup!"
             });
+        }
+        const comparePassword = yield bcrypt_1.default.compare(password, admin.password);
+        if (!comparePassword) {
+            return res.status(403).json({ message: "Password Mismatch!" });
         }
         const token = jsonwebtoken_1.default.sign({
             id: admin.id

@@ -45,6 +45,19 @@ router.post("/place-order/:id", middleware_1.UserAuthenticate, (req, res) => __a
         if (!userId || !productId || !totalPrice) {
             return res.status(403).json({ message: "Invalid Inputs!" });
         }
+        const productStockUpdation = yield db_1.prismaClient.product.updateMany(({
+            where: {
+                id: { in: productId }
+            },
+            data: {
+                stock: {
+                    decrement: 1
+                }
+            }
+        }));
+        if (!productStockUpdation) {
+            return res.status(403).json({ message: "Stock Updation Failed!!" });
+        }
         const order = yield db_1.prismaClient.order.create({
             data: {
                 userId: userId,

@@ -29,7 +29,7 @@ router.get("/getallproducts",async(req,res)=>{
 router.get("/getallproducts/:id",AdminAuthenticate,async(req,res)=>{
     try {
         const companyId = req.params.id
-        const getAllProducts = await prismaClient.product.findFirst({
+        const getAllProducts = await prismaClient.product.findMany({
             where:{
                 companyId:companyId
             }

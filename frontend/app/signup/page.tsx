@@ -15,7 +15,7 @@ export default function(){
             <input type="text" placeholder="Enter username.." value={username} onChange={(e)=>setUsername(e.target.value)}/>
             <input type="text" placeholder="Enter password.." value={password} onChange={(e)=>setPassword(e.target.value)}/>
             <button onClick={async()=>{
-                const res = await axios.post(`${BACKEND_URL}/user/signin`,{
+                const res = await axios.post(`${BACKEND_URL}/user/signup`,{
                     name,
                     username,
                     password
